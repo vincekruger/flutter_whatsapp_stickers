@@ -1,5 +1,7 @@
 # WhatsApp Stickers plugin for Flutter
 
+[![pub package](https://img.shields.io/pub/v/flutter_whatsapp_stickers.svg)](https://pub.dartlang.org/packages/flutter_whatsapp_stickers)
+
 Note: This plugin is still under development and for now there is only support for Android. Feedback and Pull Requests welcome!
 
 ## Getting Started
