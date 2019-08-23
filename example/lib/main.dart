@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_whatsapp_stickers/whatsapp_stickers.dart';
+import 'package:flutter_whatsapp_stickers/flutter_whatsapp_stickers.dart';
 
 void main() => runApp(MyApp());
 
@@ -62,6 +62,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'WhatsApp Sticker Pack',
       home: Scaffold(
         appBar: AppBar(
           title: const Text('WhatsApp Sticker Pack'),
@@ -85,15 +86,16 @@ class _MyAppState extends State<MyApp> {
               ),
               RaisedButton(
                 onPressed: () async {
-                  await _waStickers.addStickerPack(
-                    packageName: WhatsAppStickers.consumerWhatsAppPackageName,
+                  _waStickers.addStickerPack(
+                    packageName: WhatsAppPackage.Consumer,
                     stickerPackIdentifier: _stickerPackIdentifier,
                     stickerPackName: _stickerPackName,
+                    listener: _listener,
                   );
-                  bool installed = await _waStickers.isStickerPackInstalled(_stickerPackIdentifier);
-                  setState(() {
-                    _stickerPackInstalled = installed;
-                  });
+                  // bool installed = await _waStickers.isStickerPackInstalled(_stickerPackIdentifier);
+                  // setState(() {
+                  //   _stickerPackInstalled = installed;
+                  // });
                 },
                 child: Text("Add Sticker Pack"),
               ),
@@ -112,5 +114,12 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+
+  Future<void> _listener(StickerPackResult action, bool result, {String error}) async {
+    print("_listener");
+    print(action);
+    print(result);
+    print(error);
   }
 }
