@@ -58,7 +58,7 @@ public class StickerContentProvider extends ContentProvider {
     private static final String STICKER_FILE_NAME_IN_QUERY = "sticker_file_name";
     private static final String STICKER_FILE_EMOJI_IN_QUERY = "sticker_emoji";
     private static final String CONTENT_PATH = "sticker_packs/";
-    private static final String CONTENT_FILE_NAME = "sticker_packs.json";
+    private static final String CONTENT_FILE_NAME = BuildConfig.STICKER_PACK_FILE;
 
     private boolean nonAssetContentProvider = false;
     private String contentPath;
