@@ -21,6 +21,7 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.os.CancellationSignal;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -139,10 +140,13 @@ public class StickerContentProvider extends ContentProvider {
         final int code = MATCHER.match(uri);
 
         if (code == METADATA_CODE) {
+            Log.w("CONTENT", "getPackForAllStickerPacks");
             return getPackForAllStickerPacks(uri);
         } else if (code == METADATA_CODE_FOR_SINGLE_PACK) {
+            Log.w("CONTENT", "getCursorForSingleStickerPack");
             return getCursorForSingleStickerPack(uri);
         } else if (code == STICKERS_CODE) {
+            Log.w("CONTENT", "getStickersForAStickerPack");
             return getStickersForAStickerPack(uri);
         } else {
             throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -201,9 +205,7 @@ public class StickerContentProvider extends ContentProvider {
     }
 
     private List<StickerPack> getStickerPackList() {
-        if (stickerPackList == null) {
-            readContentFile(Objects.requireNonNull(getContext()));
-        }
+        readContentFile(Objects.requireNonNull(getContext()));
         return stickerPackList;
     }
 
@@ -332,6 +334,11 @@ public class StickerContentProvider extends ContentProvider {
             Log.e(Objects.requireNonNull(getContext()).getPackageName(), "IOException when getting asset file, uri:" + uri, e);
             return null;
         }
+    }
+
+    @Override
+    public boolean refresh(Uri uri, Bundle args, CancellationSignal cancellationSignal){
+        return true;
     }
 
     @Override

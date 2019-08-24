@@ -6,7 +6,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
-typedef Future<void> MessageHandler(StickerPackResult action, bool status, {String error});
+typedef Future<void> MessageHandler(StickerPackResult action, bool status,
+    {String error});
 
 enum StickerPackResult {
   SUCCESS,
@@ -27,7 +28,8 @@ class WhatsAppStickers {
   static const consumerWhatsAppPackageName = 'com.whatsapp';
   static const businessWhatsAppPackageName = 'com.whatsapp.w4b';
 
-  static const MethodChannel _channel = const MethodChannel('io.github.vincekruger/whatsapp_stickers');
+  static const MethodChannel _channel =
+      const MethodChannel('io.github.vincekruger/whatsapp_stickers');
 
   MessageHandler _addStickerPackListener;
 
@@ -55,7 +57,8 @@ class WhatsAppStickers {
   /// Check if a sticker pack is installed on WhatsApp
   /// [stickerPackIdentifier] The sticker pack identifier
   Future<bool> isStickerPackInstalled(String stickerPackIdentifier) async {
-    final bool result = await _channel.invokeMethod("isStickerPackInstalled", {"identifier": stickerPackIdentifier});
+    final bool result = await _channel.invokeMethod(
+        "isStickerPackInstalled", {"identifier": stickerPackIdentifier});
     return result;
   }
 
