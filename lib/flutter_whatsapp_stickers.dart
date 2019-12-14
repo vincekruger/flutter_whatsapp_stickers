@@ -54,6 +54,10 @@ class WhatsAppStickers {
     return await _channel.invokeMethod("isWhatsAppSmbAppInstalled");
   }
 
+  static void launchWhatsApp() {
+    _channel.invokeMethod("launchWhatsApp");
+  }
+
   /// Check if a sticker pack is installed on WhatsApp
   /// [stickerPackIdentifier] The sticker pack identifier
   Future<bool> isStickerPackInstalled(String stickerPackIdentifier) async {
