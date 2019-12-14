@@ -6,8 +6,10 @@ homepage: https://github.com/vincekruger/flutter_whatsapp_stickers
 
 flutter:
   plugin:
-    androidPackage: io.github.vincekruger.whatsapp_stickers
-    pluginClass: WhatsAppStickersPlugin
+    platforms:
+      android:
+        package: io.github.vincekruger.whatsapp_stickers
+        pluginClass: WhatsAppStickersPlugin
 
 dependencies:
   flutter:
