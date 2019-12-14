@@ -1,3 +1,7 @@
+## 1.0.0+2
+
+Upgraded the WhatsApp Stickers Extentions for Android
+
 ## 1.0.0
 
 Bumped this straight to version 1.0.0

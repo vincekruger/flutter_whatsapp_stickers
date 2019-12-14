@@ -46,10 +46,13 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     bool whatsAppInstalled = await WhatsAppStickers.isWhatsAppInstalled;
-    bool whatsAppConsumerAppInstalled = await WhatsAppStickers.isWhatsAppConsumerAppInstalled;
-    bool whatsAppSmbAppInstalled = await WhatsAppStickers.isWhatsAppSmbAppInstalled;
+    bool whatsAppConsumerAppInstalled =
+        await WhatsAppStickers.isWhatsAppConsumerAppInstalled;
+    bool whatsAppSmbAppInstalled =
+        await WhatsAppStickers.isWhatsAppSmbAppInstalled;
 
-    _stickerPackInstalled = await _waStickers.isStickerPackInstalled(_stickerPackIdentifier);
+    _stickerPackInstalled =
+        await _waStickers.isStickerPackInstalled(_stickerPackIdentifier);
 
     setState(() {
       _platformVersion = platformVersion;
@@ -74,7 +77,8 @@ class _MyAppState extends State<MyApp> {
             children: <Widget>[
               Text('Running on: $_platformVersion'),
               Text("WhatsApp Installed: $_whatsAppInstalled"),
-              Text("WhatsApp Consumer Installed: $_whatsAppConsumerAppInstalled"),
+              Text(
+                  "WhatsApp Consumer Installed: $_whatsAppConsumerAppInstalled"),
               Text("WhatsApp Business Installed: $_whatsAppSmbAppInstalled"),
               Padding(
                 padding: const EdgeInsets.only(top: 10),
@@ -101,14 +105,17 @@ class _MyAppState extends State<MyApp> {
               ),
               RaisedButton(
                 onPressed: () async {
-                  bool installed = await _waStickers.isStickerPackInstalled(_stickerPackIdentifier);
+                  bool installed = await _waStickers
+                      .isStickerPackInstalled(_stickerPackIdentifier);
                   setState(() {
                     _stickerPackInstalled = installed;
                   });
                 },
                 child: Text("Check if Sticker Pack is Installed"),
               ),
-              Text(_stickerPackInstalled ? "Yes... it's installed" : "No! Install it"),
+              Text(_stickerPackInstalled
+                  ? "Yes... it's installed"
+                  : "No! Install it"),
             ],
           ),
         ),
@@ -116,7 +123,8 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Future<void> _listener(StickerPackResult action, bool result, {String error}) async {
+  Future<void> _listener(StickerPackResult action, bool result,
+      {String error}) async {
     print("_listener");
     print(action);
     print(result);

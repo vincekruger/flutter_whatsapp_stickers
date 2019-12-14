@@ -3,7 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_whatsapp_stickers/flutter_whatsapp_stickers.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('io.github.vincekruger/whatsapp_stickers');
+  const MethodChannel channel =
+      MethodChannel('io.github.vincekruger/whatsapp_stickers');
 
   setUp(() {
     channel.setMockMethodCallHandler((MethodCall methodCall) async {

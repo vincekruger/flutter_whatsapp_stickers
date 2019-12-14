@@ -1,13 +1,15 @@
 name: flutter_whatsapp_stickers
-description: A flutter plugin for Whatsapp stickers.
-version: 1.0.0
-author: Vince <vincekruger@gmail.com>
+description: Flutter plugin for adding WhatsApp Stickers within your flutter app. For now only Android support is available.
+
+version: 1.0.0+2
 homepage: https://github.com/vincekruger/flutter_whatsapp_stickers
 
 flutter:
   plugin:
-    androidPackage: io.github.vincekruger.whatsapp_stickers
-    pluginClass: WhatsAppStickersPlugin
+    platforms:
+      android:
+        package: io.github.vincekruger.whatsapp_stickers
+        pluginClass: WhatsAppStickersPlugin
 
 dependencies:
   flutter:

@@ -64,6 +64,12 @@ public class WhatsAppStickersPlugin extends BroadcastReceiver implements MethodC
                 result.success(WhitelistCheck.isWhatsAppSmbAppInstalled(registrar.context().getPackageManager()));
                 break;
             }
+            case "launchWhatsApp": {
+                Intent launchIntent = registrar.context().getPackageManager().getLaunchIntentForPackage(WhitelistCheck.CONSUMER_WHATSAPP_PACKAGE_NAME);
+                registrar.activity().startActivity(launchIntent);
+                result.success(true);
+                break;
+            }
             case "isStickerPackInstalled": {
                 String stickerPackIdentifier = call.argument("identifier");
                 final boolean installed = WhitelistCheck.isWhitelisted(registrar.context(), stickerPackIdentifier);

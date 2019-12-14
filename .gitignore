@@ -5,6 +5,7 @@
 .idea
 .pub
 pubspec.lock
+local.properties
 
 
 # Miscellaneous
@@ -17,6 +18,7 @@ pubspec.lock
 .buildlog/
 .history
 .svn/
+.vscode/
 
 # IntelliJ related
 *.iml
@@ -78,3 +80,5 @@ flutter_export_environment.sh
 **/ios/Flutter/flutter_export_environment.sh
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
+/example/.flutter-plugins-dependencies
+/example/ios/Flutter/flutter_export_environment.sh
