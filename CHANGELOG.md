@@ -1,3 +1,8 @@
+## 1.0.1
+
+- [Bug](https://github.com/vincekruger/flutter_whatsapp_stickers/issues/1) fixes
+- Documentation updated with instruction
+
 ## 1.0.0+2
 
 Upgraded the WhatsApp Stickers Extentions for Android
