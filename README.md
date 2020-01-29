@@ -8,7 +8,18 @@ Note: This plugin is still under development and for now only Android is support
 
 Add [flutter_whatsapp_stickers](https://pub.dev/packages/flutter_whatsapp_stickers) as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
-Check out the example directory for a sample app.
+Copy [sticker_packs](https://github.com/vincekruger/flutter_whatsapp_stickers/tree/master/example/sticker_packs) folder to root folder of your flutter application
+
+Add `sticker_packs` folder contents to `assets` in `pubspec.yaml` file.
+
+```yaml
+flutter:
+  assets:
+    - sticker_packs/sticker_packs.json
+    - sticker_packs/1/
+```
+
+Check out the [example](https://github.com/vincekruger/flutter_whatsapp_stickers/tree/master/example) directory for a sample app.
 
 ## Android Configuration
 
