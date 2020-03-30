@@ -1,6 +1,7 @@
 # Don’t commit the following directories created by pub.
 .dart_tool
 .packages
+.metadata
 .DS_Store
 .idea
 .pub
