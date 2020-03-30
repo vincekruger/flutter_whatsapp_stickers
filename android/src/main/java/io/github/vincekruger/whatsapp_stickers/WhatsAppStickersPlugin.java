@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.util.Log;
+import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import io.flutter.plugin.common.MethodCall;
@@ -29,7 +30,8 @@ public class WhatsAppStickersPlugin extends BroadcastReceiver implements MethodC
     private final MethodChannel channel;
 
     public static void registerWith(Registrar registrar) {
-        final MethodChannel channel = new MethodChannel(registrar.messenger(), "io.github.vincekruger/whatsapp_stickers");
+        final MethodChannel channel = new MethodChannel(registrar.messenger(),
+                "io.github.vincekruger/whatsapp_stickers");
         final WhatsAppStickersPlugin plugin = new WhatsAppStickersPlugin(registrar, channel);
         channel.setMethodCallHandler(plugin);
     }
@@ -65,7 +67,8 @@ public class WhatsAppStickersPlugin extends BroadcastReceiver implements MethodC
                 break;
             }
             case "launchWhatsApp": {
-                Intent launchIntent = registrar.context().getPackageManager().getLaunchIntentForPackage(WhitelistCheck.CONSUMER_WHATSAPP_PACKAGE_NAME);
+                Intent launchIntent = registrar.context().getPackageManager()
+                        .getLaunchIntentForPackage(WhitelistCheck.CONSUMER_WHATSAPP_PACKAGE_NAME);
                 registrar.activity().startActivity(launchIntent);
                 result.success(true);
                 break;
@@ -85,11 +88,9 @@ public class WhatsAppStickersPlugin extends BroadcastReceiver implements MethodC
                 String stickerPackName = call.argument("name");
 
                 Intent intent = StickerPackActivity.createIntentToAddStickerPack(
-                    getContentProviderAuthority(registrar.context()), 
-                    stickerPackIdentifier, 
-                    stickerPackName
-                );
-                intent.setPackage(whatsAppPackage.isEmpty() ? WhitelistCheck.CONSUMER_WHATSAPP_PACKAGE_NAME : whatsAppPackage);
+                        getContentProviderAuthority(registrar.context()), stickerPackIdentifier, stickerPackName);
+                intent.setPackage(
+                        whatsAppPackage.isEmpty() ? WhitelistCheck.CONSUMER_WHATSAPP_PACKAGE_NAME : whatsAppPackage);
 
                 try {
                     registrar.activity().startActivityForResult(intent, ADD_PACK);
@@ -99,6 +100,12 @@ public class WhatsAppStickersPlugin extends BroadcastReceiver implements MethodC
                 }
                 break;
             }
+            case "updatedStickerPackContentsFile":
+                String packageName = registrar.context().getPackageName();
+                String stickerPackIdentifier = call.argument("identifier");
+                Uri uri = Uri.parse("content://" + packageName + ".stickercontentprovider/metadata/" + stickerPackIdentifier);
+                registrar.context().getContentResolver().notifyChange(uri, null);
+                break;
             default:
                 result.notImplemented();
                 break;
@@ -118,15 +125,14 @@ public class WhatsAppStickersPlugin extends BroadcastReceiver implements MethodC
         if (action == null) {
             return;
         }
-        
+
         if (action.equals(StickerPackActivity.ACTION_STICKER_PACK_RESULT)) {
             // Success
             Map<String, Object> content = new HashMap<>();
             content.put("action", intent.getStringExtra(StickerPackActivity.EXTRA_STICKER_PACK_ACTION));
             content.put("result", intent.getBooleanExtra(StickerPackActivity.EXTRA_STICKER_PACK_RESULT, false));
             channel.invokeMethod("onSuccess", content);
-        }
-        else if (action.equals(StickerPackActivity.ACTION_STICKER_PACK_ERROR)) {
+        } else if (action.equals(StickerPackActivity.ACTION_STICKER_PACK_ERROR)) {
             // Error
             String error = intent.getStringExtra(StickerPackActivity.EXTRA_STICKER_PACK_ERROR);
             Map<String, Object> content = new HashMap<>();

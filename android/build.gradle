@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.2'
+        classpath 'com.android.tools.build:gradle:3.5.3'
     }
 }
 
@@ -26,24 +26,44 @@ android {
         noCompress "webp"
     }
     
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 29
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "STICKER_PACK_FILE", "\"sticker_packs.json\"")
     }
     lintOptions {
         disable 'InvalidPackage'
     }
+    // buildTypes {
+    //     debug {
+    //         minifyEnabled false
+    //         shrinkResources false
+    //     }
+    //     release {
+    //         minifyEnabled true
+    //         shrinkResources true
+    //     }
+    // }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+    packagingOptions {
+        exclude 'lib/*/libnative-imagetranscoder.so'
+        exclude 'lib/*/libnative-filters.so'
+    }
 }
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
-    implementation 'com.facebook.fresco:fresco:2.0.0'
-    implementation 'com.facebook.fresco:webpsupport:2.0.0'
-    implementation 'com.facebook.fresco:animated-webp:2.0.0'
-    implementation 'com.facebook.fresco:animated-base:2.0.0'
+
+    def fresco_version = '2.1.0'
+    implementation "com.facebook.fresco:fresco:$fresco_version"
+    implementation "com.facebook.fresco:webpsupport:$fresco_version"
+    implementation "com.facebook.fresco:animated-webp:$fresco_version"
+    implementation "com.facebook.fresco:animated-base:$fresco_version"
 }

@@ -13,6 +13,8 @@
             android:authorities="${applicationId}.stickercontentprovider"
             android:enabled="true"
             android:exported="true"
-            android:readPermission="com.whatsapp.sticker.READ" />
+            android:readPermission="com.whatsapp.sticker.READ"
+            />
+            <!-- android:readPermission="com.whatsapp.sticker.READ" -->
     </application>
 </manifest>
