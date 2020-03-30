@@ -6,7 +6,7 @@ Fixed an issue where dynamic sticker packs where not being added to WhatsApp
 
 Added a new method to notify changes to sticker packs
 
-Rebuilt the Exmaple App.  It now has two example sticker packs and displays mor information
+Rebuilt the Example App.  It now has two example sticker packs and displays more information
 
 Added a new example app for dynamic content showcasing how to use dynamic sticker packs
 
