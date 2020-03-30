@@ -30,7 +30,6 @@ class WhatsAppStickers {
 
   static const MethodChannel _channel =
       const MethodChannel('io.github.vincekruger/whatsapp_stickers');
-
   MessageHandler _addStickerPackListener;
 
   /// Get the platform version
@@ -54,16 +53,26 @@ class WhatsAppStickers {
     return await _channel.invokeMethod("isWhatsAppSmbAppInstalled");
   }
 
+  /// Launch WhatsApp
   static void launchWhatsApp() {
     _channel.invokeMethod("launchWhatsApp");
   }
 
   /// Check if a sticker pack is installed on WhatsApp
+  ///
   /// [stickerPackIdentifier] The sticker pack identifier
   Future<bool> isStickerPackInstalled(String stickerPackIdentifier) async {
     final bool result = await _channel.invokeMethod(
         "isStickerPackInstalled", {"identifier": stickerPackIdentifier});
     return result;
+  }
+
+  /// Updated sticker packs
+  ///
+  /// [stickerPackIdentifier] The sticker pack identider
+  void updatedStickerPacks(String stickerPackIdentifier) {
+    _channel.invokeMethod("updatedStickerPackContentsFile",
+        {"identifier": stickerPackIdentifier});
   }
 
   /// Add a sticker pack to whatsapp.

@@ -100,9 +100,9 @@ public class StickerContentProvider extends ContentProvider {
 
         // Check meta-data
         try {
-            ApplicationInfo ai = getContext().getPackageManager().getApplicationInfo(context.getPackageName(),
+            final ApplicationInfo ai = getContext().getPackageManager().getApplicationInfo(context.getPackageName(),
                     PackageManager.GET_META_DATA);
-            Bundle bundle = ai.metaData;
+            final Bundle bundle = ai.metaData;
             nonAssetContentProvider = bundle.getBoolean("NonAssetContentProvider");
         } catch (PackageManager.NameNotFoundException | NullPointerException e) {
             nonAssetContentProvider = false;
@@ -129,8 +129,8 @@ public class StickerContentProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, String selection, String[] selectionArgs,
-            String sortOrder) {
+    public MatrixCursor query(@NonNull final Uri uri, @Nullable final String[] projection, final String selection,
+            final String[] selectionArgs, final String sortOrder) {
         final int code = MATCHER.match(uri);
         if (code == METADATA_CODE) {
             return getPackForAllStickerPacks(uri);
@@ -145,7 +145,7 @@ public class StickerContentProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public AssetFileDescriptor openAssetFile(@NonNull Uri uri, @NonNull String mode) {
+    public AssetFileDescriptor openAssetFile(@NonNull final Uri uri, @NonNull final String mode) {
         final int matchCode = MATCHER.match(uri);
         if (matchCode == STICKERS_ASSET_CODE || matchCode == STICKER_PACK_TRAY_ICON_CODE) {
             return getImageAsset(uri);
@@ -154,40 +154,40 @@ public class StickerContentProvider extends ContentProvider {
     }
 
     @Override
-    public String getType(@NonNull Uri uri) {
+    public String getType(@NonNull final Uri uri) {
         final Context context = getContext();
         assert context != null;
 
         final int matchCode = MATCHER.match(uri);
         switch (matchCode) {
-        case METADATA_CODE:
-            return "vnd.android.cursor.dir/vnd." + WhatsAppStickersPlugin.getContentProviderAuthority(context) + "."
-                    + METADATA;
-        case METADATA_CODE_FOR_SINGLE_PACK:
-            return "vnd.android.cursor.item/vnd." + WhatsAppStickersPlugin.getContentProviderAuthority(context) + "."
-                    + METADATA;
-        case STICKERS_CODE:
-            return "vnd.android.cursor.dir/vnd." + WhatsAppStickersPlugin.getContentProviderAuthority(context) + "."
-                    + STICKERS;
-        case STICKERS_ASSET_CODE:
-            final List<String> pathSegments = uri.getPathSegments();
+            case METADATA_CODE:
+                return "vnd.android.cursor.dir/vnd." + WhatsAppStickersPlugin.getContentProviderAuthority(context) + "."
+                        + METADATA;
+            case METADATA_CODE_FOR_SINGLE_PACK:
+                return "vnd.android.cursor.item/vnd." + WhatsAppStickersPlugin.getContentProviderAuthority(context)
+                        + "." + METADATA;
+            case STICKERS_CODE:
+                return "vnd.android.cursor.dir/vnd." + WhatsAppStickersPlugin.getContentProviderAuthority(context) + "."
+                        + STICKERS;
+            case STICKERS_ASSET_CODE:
+                final List<String> pathSegments = uri.getPathSegments();
 
-            if (pathSegments.size() != 3) {
-                throw new IllegalArgumentException("path segments should be 3, uri is: " + uri);
-            }
+                if (pathSegments.size() != 3) {
+                    throw new IllegalArgumentException("path segments should be 3, uri is: " + uri);
+                }
 
-            String fileName = pathSegments.get(pathSegments.size() - 1);
-            String extension = fileName.substring(fileName.lastIndexOf("."));
+                final String fileName = pathSegments.get(pathSegments.size() - 1);
+                final String extension = fileName.substring(fileName.lastIndexOf("."));
 
-            return extension.equals(".png") ? "image/png" : "image/webp";
-        default:
-            throw new IllegalArgumentException("Unknown URI: " + uri);
+                return extension.equals(".png") ? "image/png" : "image/webp";
+            default:
+                throw new IllegalArgumentException("Unknown URI: " + uri);
         }
     }
 
-    private synchronized void readContentFile(@NonNull Context context) {
+    private synchronized void readContentFile(@NonNull final Context context) {
         if (nonAssetContentProvider) {
-            File file = new File(contentPath + CONTENT_FILE_NAME);
+            final File file = new File(contentPath + CONTENT_FILE_NAME);
             try (InputStream contentsInputStream = new FileInputStream(file)) {
                 stickerPackList = ContentFileParser.parseStickerPacks(contentsInputStream);
             } catch (IOException | IllegalStateException e) {
@@ -203,19 +203,19 @@ public class StickerContentProvider extends ContentProvider {
     }
 
     private List<StickerPack> getStickerPackList() {
-        if (stickerPackList == null) {
+        if (stickerPackList == null || nonAssetContentProvider) {
             readContentFile(Objects.requireNonNull(getContext()));
         }
         return stickerPackList;
     }
 
-    private Cursor getPackForAllStickerPacks(@NonNull Uri uri) {
+    private MatrixCursor getPackForAllStickerPacks(@NonNull final Uri uri) {
         return getStickerPackInfo(uri, getStickerPackList());
     }
 
-    private Cursor getCursorForSingleStickerPack(@NonNull Uri uri) {
+    private MatrixCursor getCursorForSingleStickerPack(@NonNull final Uri uri) {
         final String identifier = uri.getLastPathSegment();
-        for (StickerPack stickerPack : getStickerPackList()) {
+        for (final StickerPack stickerPack : getStickerPackList()) {
             if (identifier.equals(stickerPack.identifier)) {
                 return getStickerPackInfo(uri, Collections.singletonList(stickerPack));
             }
@@ -225,14 +225,14 @@ public class StickerContentProvider extends ContentProvider {
     }
 
     @NonNull
-    private Cursor getStickerPackInfo(@NonNull Uri uri, @NonNull List<StickerPack> stickerPackList) {
-        MatrixCursor cursor = new MatrixCursor(new String[] { STICKER_PACK_IDENTIFIER_IN_QUERY,
+    private MatrixCursor getStickerPackInfo(@NonNull final Uri uri, @NonNull final List<StickerPack> stickerPackList) {
+        final MatrixCursor cursor = new MatrixCursor(new String[] { STICKER_PACK_IDENTIFIER_IN_QUERY,
                 STICKER_PACK_NAME_IN_QUERY, STICKER_PACK_PUBLISHER_IN_QUERY, STICKER_PACK_ICON_IN_QUERY,
                 ANDROID_APP_DOWNLOAD_LINK_IN_QUERY, IOS_APP_DOWNLOAD_LINK_IN_QUERY, PUBLISHER_EMAIL, PUBLISHER_WEBSITE,
                 PRIVACY_POLICY_WEBSITE, LICENSE_AGREEMENT_WEBSITE, IMAGE_DATA_VERSION, AVOID_CACHE, });
 
-        for (StickerPack stickerPack : stickerPackList) {
-            MatrixCursor.RowBuilder builder = cursor.newRow();
+        for (final StickerPack stickerPack : stickerPackList) {
+            final MatrixCursor.RowBuilder builder = cursor.newRow();
             builder.add(stickerPack.identifier);
             builder.add(stickerPack.name);
             builder.add(stickerPack.publisher);
@@ -252,14 +252,14 @@ public class StickerContentProvider extends ContentProvider {
     }
 
     @NonNull
-    private Cursor getStickersForAStickerPack(@NonNull Uri uri) {
+    private MatrixCursor getStickersForAStickerPack(@NonNull final Uri uri) {
         final String identifier = uri.getLastPathSegment();
-        MatrixCursor cursor = new MatrixCursor(
+        final MatrixCursor cursor = new MatrixCursor(
                 new String[] { STICKER_FILE_NAME_IN_QUERY, STICKER_FILE_EMOJI_IN_QUERY });
 
-        for (StickerPack stickerPack : getStickerPackList()) {
+        for (final StickerPack stickerPack : getStickerPackList()) {
             if (identifier.equals(stickerPack.identifier)) {
-                for (Sticker sticker : stickerPack.getStickers()) {
+                for (final Sticker sticker : stickerPack.getStickers()) {
                     cursor.addRow(new Object[] { sticker.imageFileName, TextUtils.join(",", sticker.emojis) });
                 }
             }
@@ -269,15 +269,15 @@ public class StickerContentProvider extends ContentProvider {
         return cursor;
     }
 
-    private AssetFileDescriptor getImageAsset(Uri uri) throws IllegalArgumentException {
-        AssetManager am = Objects.requireNonNull(getContext()).getAssets();
+    private AssetFileDescriptor getImageAsset(final Uri uri) throws IllegalArgumentException {
+        final AssetManager am = Objects.requireNonNull(getContext()).getAssets();
         final List<String> pathSegments = uri.getPathSegments();
 
         if (pathSegments.size() != 3) {
             throw new IllegalArgumentException("path segments should be 3, uri is: " + uri);
         }
 
-        String fileName = pathSegments.get(pathSegments.size() - 1);
+        final String fileName = pathSegments.get(pathSegments.size() - 1);
         final String identifier = pathSegments.get(pathSegments.size() - 2);
 
         if (TextUtils.isEmpty(identifier)) {
@@ -289,12 +289,12 @@ public class StickerContentProvider extends ContentProvider {
         }
 
         // making sure the file that is trying to be fetched is in the list of stickers.
-        for (StickerPack stickerPack : getStickerPackList()) {
+        for (final StickerPack stickerPack : getStickerPackList()) {
             if (identifier.equals(stickerPack.identifier)) {
                 if (fileName.equals(stickerPack.trayImageFile)) {
                     return fetchFile(uri, am, fileName, identifier);
                 } else {
-                    for (Sticker sticker : stickerPack.getStickers()) {
+                    for (final Sticker sticker : stickerPack.getStickers()) {
                         if (fileName.equals(sticker.imageFileName)) {
                             return fetchFile(uri, am, fileName, identifier);
                         }
@@ -305,29 +305,29 @@ public class StickerContentProvider extends ContentProvider {
         return null;
     }
 
-    private AssetFileDescriptor fetchFile(@NonNull Uri uri, @NonNull AssetManager am, @NonNull String fileName,
-            @NonNull String identifier) {
+    private AssetFileDescriptor fetchFile(@NonNull final Uri uri, @NonNull final AssetManager am,
+            @NonNull final String fileName, @NonNull final String identifier) {
         return nonAssetContentProvider ? fetchNonAssetFile(uri, fileName, identifier)
                 : fetchAssetFile(uri, am, fileName, identifier);
     }
 
-    private AssetFileDescriptor fetchNonAssetFile(Uri uri, String fileName, String identifier) {
+    private AssetFileDescriptor fetchNonAssetFile(final Uri uri, final String fileName, final String identifier) {
         try {
             final File file = new File(contentPath + identifier, fileName);
             return new AssetFileDescriptor(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY), 0,
                     AssetFileDescriptor.UNKNOWN_LENGTH);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             Log.e(Objects.requireNonNull(getContext()).getPackageName(),
                     "IOException when getting asset file, uri:" + uri, e);
             return null;
         }
     }
 
-    private AssetFileDescriptor fetchAssetFile(@NonNull Uri uri, @NonNull AssetManager am, @NonNull String fileName,
-            @NonNull String identifier) {
+    private AssetFileDescriptor fetchAssetFile(@NonNull final Uri uri, @NonNull final AssetManager am,
+            @NonNull final String fileName, @NonNull final String identifier) {
         try {
             return am.openFd(contentPath + identifier + "/" + fileName);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             Log.e(Objects.requireNonNull(getContext()).getPackageName(),
                     "IOException when getting asset file, uri:" + uri, e);
             return null;
@@ -335,28 +335,29 @@ public class StickerContentProvider extends ContentProvider {
     }
 
     @Override
-    public boolean refresh(Uri uri, Bundle args, CancellationSignal cancellationSignal) {
+    public boolean refresh(final Uri uri, final Bundle args, final CancellationSignal cancellationSignal) {
         return true;
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @NonNull String selection, String[] selectionArgs) {
+    public int delete(@NonNull final Uri uri, @NonNull final String selection, final String[] selectionArgs) {
         throw new UnsupportedOperationException("Not supported");
     }
 
     @Override
-    public Uri insert(@NonNull Uri uri, ContentValues values) {
+    public Uri insert(@NonNull final Uri uri, final ContentValues values) {
         throw new UnsupportedOperationException("Not supported");
     }
 
     @Override
-    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull final Uri uri, final ContentValues values, final String selection,
+            final String[] selectionArgs) {
         throw new UnsupportedOperationException("Not supported");
     }
 
-    public static String convertStreamToString(InputStream is) throws Exception {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
+    public static String convertStreamToString(final InputStream is) throws Exception {
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        final StringBuilder sb = new StringBuilder();
         String line = null;
         while ((line = reader.readLine()) != null) {
             sb.append(line).append("\n");
@@ -365,10 +366,10 @@ public class StickerContentProvider extends ContentProvider {
         return sb.toString();
     }
 
-    public static String getStringFromFile(String filePath) throws Exception {
-        File fl = new File(filePath);
-        FileInputStream fin = new FileInputStream(fl);
-        String ret = convertStreamToString(fin);
+    public static String getStringFromFile(final String filePath) throws Exception {
+        final File fl = new File(filePath);
+        final FileInputStream fin = new FileInputStream(fl);
+        final String ret = convertStreamToString(fin);
         // Make sure you close all streams.
         fin.close();
         return ret;
