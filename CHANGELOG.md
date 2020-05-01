@@ -1,3 +1,7 @@
+## 1.0.0+4
+
+Updated gradle and pub package version
+
 ## 1.0.0+3
 
 Updated the base WhatsApp Sticker Libraries
