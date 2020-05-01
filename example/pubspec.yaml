@@ -1,9 +1,9 @@
 name: whatsapp_stickers_example
-description: Demonstrates how to use the whatsapp_stickers plugin.
+description: Demonstrates how to use the flutter_whatsapp_stickers plugin.
 publish_to: 'none'
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
