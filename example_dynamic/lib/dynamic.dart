@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_whatsapp_stickers/flutter_whatsapp_stickers.dart';
-import 'package:whatsapp_stickers_example_dynamic/utils.dart';
+import 'utils.dart';
 
 int random() {
   var rng = new Random();
@@ -32,11 +32,11 @@ class _DynamicContentState extends State<DynamicContent> {
   bool _stickerPackInstalled1 = false;
   bool _stickerPackInstalled2 = false;
 
-  Directory _applicationDirectory;
-  Directory _stickerPacksDirectory;
-  File _stickerPacksConfigFile;
-  Map<String, dynamic> _stickerPacksConfig;
-  List<dynamic> _storedStickerPacks;
+  Directory? _applicationDirectory;
+  Directory? _stickerPacksDirectory;
+  File? _stickerPacksConfigFile;
+  Map<String, dynamic>? _stickerPacksConfig;
+  List<dynamic>? _storedStickerPacks;
 
   @override
   void initState() {
@@ -48,26 +48,26 @@ class _DynamicContentState extends State<DynamicContent> {
   void prepareFolderStructure() async {
     _applicationDirectory = await getApplicationDocumentsDirectory();
     _stickerPacksDirectory =
-        Directory("${_applicationDirectory.path}/sticker_packs");
+        Directory("${_applicationDirectory?.path}/sticker_packs");
     _stickerPacksConfigFile =
-        File("${_stickerPacksDirectory.path}/sticker_packs.json");
+        File("${_stickerPacksDirectory?.path}/sticker_packs.json");
 
     // Create the config file if it doesn't exist.
-    if (!await _stickerPacksConfigFile.exists()) {
-      _stickerPacksConfigFile.createSync(recursive: true);
+    if (!await _stickerPacksConfigFile!.exists()) {
+      _stickerPacksConfigFile!.createSync(recursive: true);
       _stickerPacksConfig = {
         "android_play_store_link": "",
         "ios_app_store_link": "",
         "sticker_packs": [],
       };
       String contentsOfFile = jsonEncode(_stickerPacksConfig) + "\n";
-      _stickerPacksConfigFile.writeAsStringSync(contentsOfFile, flush: true);
+      _stickerPacksConfigFile!.writeAsStringSync(contentsOfFile, flush: true);
     }
 
     // Load sticker pack config
     _stickerPacksConfig =
-        jsonDecode((await _stickerPacksConfigFile.readAsString()));
-    _storedStickerPacks = _stickerPacksConfig['sticker_packs'];
+        jsonDecode((await _stickerPacksConfigFile!.readAsString()));
+    _storedStickerPacks = _stickerPacksConfig!['sticker_packs'];
   }
 
   void checkInstallationStatuses() async {
@@ -86,7 +86,7 @@ class _DynamicContentState extends State<DynamicContent> {
     ByteData fileData = await rootBundle.load("sticker_packs/$identifier.zip");
     final archive = ZipDecoder().decodeBytes(Uint8List.view(fileData.buffer));
     Directory packageDirectory =
-        Directory("${_stickerPacksDirectory.path}/$identifier")
+        Directory("${_stickerPacksDirectory!.path}/$identifier")
           ..create(recursive: true);
 
     for (final file in archive) {
@@ -105,17 +105,17 @@ class _DynamicContentState extends State<DynamicContent> {
         jsonDecode(await packageContentsFile.readAsString());
 
     /// Add to global config
-    _storedStickerPacks.removeWhere(
+    _storedStickerPacks!.removeWhere(
         (item) => item['identifier'] == packageContentsMap['identifier']);
-    _storedStickerPacks.add(packageContentsMap);
+    _storedStickerPacks!.add(packageContentsMap);
 
     /// Update config file
-    _stickerPacksConfig['sticker_packs'] = _storedStickerPacks;
+    _stickerPacksConfig!['sticker_packs'] = _storedStickerPacks;
     JsonEncoder encoder = new JsonEncoder.withIndent('  ');
     String contentsOfFile = encoder.convert(_stickerPacksConfig) + "\n";
-    _stickerPacksConfigFile.deleteSync();
-    _stickerPacksConfigFile.createSync(recursive: true);
-    _stickerPacksConfigFile.writeAsStringSync(contentsOfFile, flush: true);
+    _stickerPacksConfigFile!.deleteSync();
+    _stickerPacksConfigFile!.createSync(recursive: true);
+    _stickerPacksConfigFile!.writeAsStringSync(contentsOfFile, flush: true);
 
     _waStickers.updatedStickerPacks(identifier);
   }
@@ -147,19 +147,20 @@ class _DynamicContentState extends State<DynamicContent> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            RaisedButton(
+            ElevatedButton(
               child: Text('Unpack'),
               onPressed: () => unpackArchive(identifier),
             ),
             SizedBox(width: 10),
-            RaisedButton(
+            ElevatedButton(
               child: Text("Install"),
               onPressed: () async {
                 _waStickers.addStickerPack(
                   packageName: WhatsAppPackage.Consumer,
                   stickerPackIdentifier: identifier,
                   stickerPackName: name,
-                  listener: (action, result, {error}) => processResponse(
+                  listener: (action, result, {error = "Error"}) =>
+                      processResponse(
                     action: action,
                     result: result,
                     error: error,
@@ -171,7 +172,7 @@ class _DynamicContentState extends State<DynamicContent> {
             ),
           ],
         ),
-        RaisedButton(
+        ElevatedButton(
           child: Text("Check if Sticker Pack Status"),
           onPressed: () => checkInstallationStatuses(),
         ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp_stickers/flutter_whatsapp_stickers.dart';
-import 'package:whatsapp_stickers_example/utils.dart';
+import 'utils.dart';
 
 class StaticContent extends StatefulWidget {
   @override
@@ -58,14 +58,14 @@ class _StaticContentState extends State<StaticContent> {
         Text("Sticker Pack Name: $name"),
         Text("Sticker Pack Identifier: $identifier"),
         SizedBox(height: 10),
-        RaisedButton(
+        ElevatedButton(
           child: Text("Add $name"),
           onPressed: () async {
             _waStickers.addStickerPack(
               packageName: WhatsAppPackage.Consumer,
               stickerPackIdentifier: identifier,
               stickerPackName: name,
-              listener: (action, result, {error}) => processResponse(
+              listener: (action, result, {error = "Error"}) => processResponse(
                 action: action,
                 result: result,
                 error: error,
@@ -75,7 +75,7 @@ class _StaticContentState extends State<StaticContent> {
             );
           },
         ),
-        RaisedButton(
+        ElevatedButton(
           child: Text("Check if Sticker Pack Status"),
           onPressed: () => checkInstallationStatuses(),
         ),
