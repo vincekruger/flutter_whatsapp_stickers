@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp_stickers/flutter_whatsapp_stickers.dart';
 
 Future<void> processResponse(
-    {StickerPackResult? action,
+    {StickerPackResult action = StickerPackResult.UNKNOWN,
     bool? result,
-    String? error,
+    String error = "Error",
     BuildContext? context,
     Function? successCallback}) async {
   SnackBar? snackBar;
@@ -20,7 +20,7 @@ Future<void> processResponse(
       snackBar = SnackBar(content: Text('Cancelled Sticker Pack Install'));
       break;
     case StickerPackResult.ERROR:
-      snackBar = SnackBar(content: Text(error!));
+      snackBar = SnackBar(content: Text(error));
       break;
     case StickerPackResult.UNKNOWN:
       snackBar = SnackBar(content: Text('Unkown Error - check the logs'));
@@ -30,7 +30,6 @@ Future<void> processResponse(
       break;
   }
 
-  /// Display a snack bar
   if (snackBar != null && context != null) {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }

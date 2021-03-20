@@ -1,3 +1,7 @@
+## 2.0.0+0
+
+- Null Safety
+
 ## 1.0.0+4
 
 Updated gradle and pub package version
