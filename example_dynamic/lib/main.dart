@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp_stickers_example_dynamic/information.dart';
-import 'package:whatsapp_stickers_example_dynamic/dynamic.dart';
+import 'dynamic.dart';
+import 'information.dart';
 
 void main() => runApp(MyApp());
 

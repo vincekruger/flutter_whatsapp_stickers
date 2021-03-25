@@ -1,4 +1,4 @@
-// Copyright 2019 Vince Kruger. All rights reserved.
+// Copyright 2021 Vince Kruger. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -30,7 +30,7 @@ class WhatsAppStickers {
 
   static const MethodChannel _channel =
       const MethodChannel('io.github.vincekruger/whatsapp_stickers');
-  MessageHandler _addStickerPackListener;
+  MessageHandler? _addStickerPackListener;
 
   /// Get the platform version
   static Future<String> get platformVersion async {
@@ -82,10 +82,10 @@ class WhatsAppStickers {
   /// [stickerPackName] The sticker pack name
   /// [listener] Sets up [MessageHandler] function for incoming events.
   void addStickerPack({
-    @required WhatsAppPackage packageName,
-    @required String stickerPackIdentifier,
-    @required String stickerPackName,
-    MessageHandler listener,
+    WhatsAppPackage packageName = WhatsAppPackage.Consumer,
+    @required String? stickerPackIdentifier,
+    @required String? stickerPackName,
+    MessageHandler? listener,
   }) {
     String packageString;
     switch (packageName) {
@@ -113,25 +113,25 @@ class WhatsAppStickers {
         bool result = call.arguments['result'];
         switch (action) {
           case 'success':
-            _addStickerPackListener(StickerPackResult.SUCCESS, result);
+            _addStickerPackListener!(StickerPackResult.SUCCESS, result);
             break;
           case 'add_successful':
-            _addStickerPackListener(StickerPackResult.ADD_SUCCESSFUL, result);
+            _addStickerPackListener!(StickerPackResult.ADD_SUCCESSFUL, result);
             break;
           case 'already_added':
-            _addStickerPackListener(StickerPackResult.ALREADY_ADDED, result);
+            _addStickerPackListener!(StickerPackResult.ALREADY_ADDED, result);
             break;
           case 'cancelled':
-            _addStickerPackListener(StickerPackResult.CANCELLED, result);
+            _addStickerPackListener!(StickerPackResult.CANCELLED, result);
             break;
           default:
-            _addStickerPackListener(StickerPackResult.UNKNOWN, result);
+            _addStickerPackListener!(StickerPackResult.UNKNOWN, result);
         }
         return null;
       case "onError":
         bool result = call.arguments['result'];
         String error = call.arguments['error'] ?? null;
-        _addStickerPackListener(StickerPackResult.ERROR, result, error: error);
+        _addStickerPackListener!(StickerPackResult.ERROR, result, error: error);
         return null;
       default:
         throw UnsupportedError("Unrecognized activity handler");
