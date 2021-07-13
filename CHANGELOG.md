@@ -1,3 +1,7 @@
+## 2.0.1+1
+
+- Animated stickers enabled
+
 ## 2.0.0+0
 
 - Null Safety
