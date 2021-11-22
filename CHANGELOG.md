@@ -1,3 +1,15 @@
+## 2.0.1+1
+
+- Animated stickers enabled
+
+## 2.0.0+0
+
+- Null Safety
+
+## 1.0.0+4
+
+Updated gradle and pub package version
+
 ## 1.0.0+3
 
 Updated the base WhatsApp Sticker Libraries

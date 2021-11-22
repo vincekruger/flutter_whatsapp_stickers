@@ -1,6 +1,6 @@
 # whatsapp_stickers_example
 
-Demonstrates how to use the whatsapp_stickers plugin.
+Demonstrates how to use the flutter_whatsapp_stickers plugin.
 
 ## Getting Started
 
